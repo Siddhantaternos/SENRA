@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SENRA — Finance Intelligence</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23060C1A'/%3E%3Crect x='2' y='2' width='28' height='28' rx='6' fill='none' stroke='%2338BDF8' stroke-width='1.5'/%3E%3Cpath d='M8 26 L16 10 L24 26' stroke='%2322C55E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#070F1E;
+  --bg2:#0B1628;
+  --bg3:#0F1E35;
+  --bg4:#132040;
+  --border:#1C3054;
+  --border2:#243860;
+  --text:#F0F4FF;
+  --text2:#A8B8D0;
+  --muted:#566880;
+  --cyan:#38BDF8;
+  --cyan2:#0EA5E9;
+  --green:#22C55E;
+  --red:#F43F5E;
+  --purple:#A78BFA;
+  --amber:#FBBF24;
+  --blue:#3B82F6;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;-webkit-font-smoothing:antialiased;}
+
+/* ── AUTH ── */
+.auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 20% 50%,#0B1E3A 0%,var(--bg) 60%);}
+.auth-box{background:var(--bg2);border:1px solid var(--border);width:100%;max-width:440px;padding:40px;position:relative;overflow:hidden;}
+.auth-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--green));}
+.auth-tab-row{display:flex;background:var(--bg3);border-radius:6px;padding:3px;margin-bottom:24px;}
+.auth-tab{flex:1;text-align:center;padding:8px;border-radius:4px;font-size:13px;cursor:pointer;color:var(--muted);transition:all .2s;font-weight:500;}
+.auth-tab.active{background:var(--bg2);color:var(--cyan);font-weight:600;}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
+.field input,.field select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px 13px;color:var(--text);font-size:13px;outline:none;font-family:'Inter',sans-serif;transition:border-color .15s;}
+.field input:focus,.field select:focus{border-color:var(--cyan);background:var(--bg4);}
+.field input::placeholder,.field select option{color:var(--muted);}
+.pw-wrap{position:relative;}
+.pw-wrap input{padding-right:42px!important;}
+.eye-btn{position:absolute;right:11px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;padding:0;line-height:1;}
+.remember-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.remember-row input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--cyan);}
+.remember-row label{font-size:12px;color:var(--text2);cursor:pointer;}
+.auth-btn{width:100%;padding:11px;background:linear-gradient(135deg,var(--cyan2),var(--blue));border:none;border-radius:6px;color:white;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;letter-spacing:.02em;transition:opacity .2s;}
+.auth-btn:hover{opacity:.9;}
+.auth-err{color:var(--red);font-size:12px;text-align:center;margin-top:10px;display:none;background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.2);border-radius:4px;padding:8px;}
+
+/* ── NAV ── */
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 20px 0 16px;height:52px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;}
+.nav-left{display:flex;align-items:center;gap:0;}
+.nav-logo-area{display:flex;align-items:center;gap:10px;padding-right:20px;border-right:1px solid var(--border);margin-right:8px;cursor:pointer;}
+.nav-logo-text{display:flex;flex-direction:column;line-height:1.1;}
+.nav-logo-name{font-size:16px;font-weight:800;background:linear-gradient(90deg,var(--cyan),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.15em;}
+.nav-logo-sub{font-size:9px;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;}
+.nav-links{display:flex;gap:2px;}
+.nav-link{padding:6px 14px;border-radius:6px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif;transition:all .15s;}
+.nav-link:hover{color:var(--text);background:var(--bg3);}
+.nav-link.active{color:var(--cyan);background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.15);}
+.nav-right{display:flex;align-items:center;gap:6px;position:relative;}
+.cur-badge{font-size:11px;color:var(--muted);background:var(--bg3);padding:4px 10px;border-radius:5px;border:1px solid var(--border);font-family:'JetBrains Mono',monospace;}
+.nav-icon-btn{width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;font-size:15px;transition:all .15s;}
+.nav-icon-btn:hover{color:var(--text);border-color:var(--border2);}
+.user-btn{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--cyan2),var(--purple));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;cursor:pointer;border:2px solid var(--border);}
+.user-dd{display:none;position:absolute;top:42px;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:10px;width:240px;z-index:300;box-shadow:0 16px 40px rgba(0,0,0,.5);overflow:hidden;}
+.user-dd.show{display:block;}
+.ud-header{padding:14px 16px;border-bottom:1px solid var(--border);background:var(--bg3);}
+.ud-name{font-size:14px;font-weight:600;margin-bottom:2px;}
+.ud-email{font-size:11px;color:var(--muted);}
+.ud-row{display:flex;justify-content:space-between;padding:8px 16px;border-bottom:1px solid var(--border);font-size:12px;}
+.ud-lbl{color:var(--muted);}
+.ud-val{color:var(--cyan);font-weight:500;font-family:'JetBrains Mono',monospace;}
+.logout-btn{width:100%;padding:10px 16px;background:transparent;border:none;color:var(--red);font-size:12px;cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:background .15s;}
+.logout-btn:hover{background:rgba(244,63,94,.08);}
+
+/* ── TICKER BAND ── */
+.ticker-band{background:var(--bg);border-bottom:1px solid var(--border);padding:6px 0;overflow:hidden;white-space:nowrap;display:none;}
+.band-inner{display:inline-block;animation:scrollband 55s linear infinite;}
+.band-inner:hover{animation-play-state:paused;}
+@keyframes scrollband{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── PAGES ── */
+.page{display:none;padding:24px;}
+.page.active{display:block;}
+
+/* ── HOME LAYOUT ── */
+.home-grid{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start;}
+.section-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+
+/* ── STAT CARDS ── */
+.cards-row{display:grid;gap:12px;margin-bottom:20px;}
+.c4{grid-template-columns:repeat(4,1fr);}
+.c3{grid-template-columns:repeat(3,1fr);}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden;transition:border-color .2s;}
+.card:hover{border-color:var(--border2);}
+.card h3{font-size:10px;color:var(--muted);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;}
+.card p{font-size:24px;font-weight:700;letter-spacing:-.02em;}
+
+/* ── BOXES ── */
+.box{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:16px;transition:border-color .2s;}
+.box:hover{border-color:var(--border2);}
+.box h3{font-size:13px;font-weight:600;margin-bottom:14px;color:var(--text);}
+
+/* ── TABLES ── */
+table{width:100%;border-collapse:collapse;}
+th{padding:8px 12px;font-size:10px;color:var(--muted);text-align:left;border-bottom:1px solid var(--border);font-weight:600;text-transform:uppercase;letter-spacing:.08em;background:var(--bg3);}
+td{padding:9px 12px;font-size:12px;border-bottom:1px solid var(--border);color:var(--text2);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.02);}
+
+/* ── AGENT PANEL ── */
+.agent-panel{background:var(--bg2);border:1px solid var(--border);border-radius:12px;display:flex;flex-direction:column;height:calc(100vh - 90px);position:sticky;top:68px;}
+.agent-head{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;flex-shrink:0;background:var(--bg3);border-radius:12px 12px 0 0;}
+.agent-av{width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,var(--cyan2),var(--blue));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;flex-shrink:0;}
+.agent-nm{font-size:12px;font-weight:600;}
+.agent-st{font-size:10px;color:var(--green);}
+.chat-msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:7px;}
+.chat-msgs::-webkit-scrollbar{width:3px;}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.msg{max-width:90%;padding:8px 11px;border-radius:8px;font-size:12px;line-height:1.55;white-space:pre-wrap;}
+.msg.user{background:var(--cyan2);color:white;align-self:flex-end;border-radius:8px 8px 2px 8px;}
+.msg.ai{background:var(--bg3);color:var(--text);align-self:flex-start;border-radius:8px 8px 8px 2px;border:1px solid var(--border);}
+.msg-lbl{font-size:9px;color:var(--cyan);font-weight:700;margin-bottom:2px;font-family:'JetBrains Mono',monospace;letter-spacing:.05em;}
+.typing{display:none;align-self:flex-start;padding:8px 12px;background:var(--bg3);border-radius:8px;border:1px solid var(--border);}
+.typing.show{display:flex;gap:4px;align-items:center;}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--muted);animation:bounce .8s infinite;}
+.dot:nth-child(2){animation-delay:.15s;}
+.dot:nth-child(3){animation-delay:.3s;}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-5px)}}
+.quick-row{padding:7px 12px;display:flex;flex-wrap:wrap;gap:4px;border-top:1px solid var(--border);flex-shrink:0;}
+.qbtn{font-size:10px;padding:3px 9px;border-radius:20px;border:1px solid var(--border);color:var(--muted);cursor:pointer;background:none;font-family:'Inter',sans-serif;transition:all .15s;}
+.qbtn:hover{border-color:var(--cyan);color:var(--cyan);}
+.chat-in-row{padding:8px 10px;border-top:1px solid var(--border);display:flex;gap:6px;flex-shrink:0;}
+.chat-in{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:8px 11px;color:var(--text);font-size:12px;outline:none;font-family:'Inter',sans-serif;transition:border-color .15s;}
+.chat-in:focus{border-color:var(--cyan);}
+.chat-in::placeholder{color:var(--muted);}
+.send-btn{background:var(--cyan2);border:none;border-radius:7px;padding:8px 12px;color:white;cursor:pointer;font-size:13px;font-weight:700;transition:opacity .15s;}
+.send-btn:hover{opacity:.85;}
+
+/* ── PORTFOLIO TABS ── */
+.tabs{display:flex;gap:3px;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:0;}
+.tab{padding:7px 16px;border-radius:6px 6px 0 0;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;border:1px solid transparent;border-bottom:none;background:none;font-family:'Inter',sans-serif;transition:all .15s;}
+.tab:hover{color:var(--text);}
+.tab.active{background:var(--bg2);color:var(--cyan);border-color:var(--border);border-bottom-color:var(--bg2);font-weight:600;}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+.form-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px;}
+.fin{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 11px;color:var(--text);font-size:12px;font-family:'Inter',sans-serif;outline:none;transition:border-color .15s;}
+.fin:focus{border-color:var(--cyan);}
+.fin::placeholder{color:var(--muted);}
+.btn{padding:8px 16px;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:white;font-family:'Inter',sans-serif;transition:opacity .15s;}
+.btn:hover{opacity:.85;}
+.btn-g{background:var(--green);}
+.btn-p{background:var(--purple);}
+.del{padding:3px 8px;background:rgba(244,63,94,.1);color:var(--red);border:1px solid rgba(244,63,94,.2);border-radius:4px;font-size:10px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+.del:hover{background:var(--red);color:white;}
+
+/* ── STOCKS PAGE ── */
+.search-wrap{position:relative;flex:1;}
+.s-input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:11px 15px;color:var(--text);font-size:13px;outline:none;font-family:'Inter',sans-serif;transition:border-color .15s;}
+.s-input:focus{border-color:var(--cyan);}
+.s-input::placeholder{color:var(--muted);}
+.s-btn{background:linear-gradient(135deg,var(--cyan2),var(--blue));border:none;border-radius:8px;padding:11px 22px;color:white;cursor:pointer;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;transition:opacity .15s;}
+.s-btn:hover{opacity:.9;}
+.dropdown{display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:8px;z-index:100;max-height:280px;overflow-y:auto;box-shadow:0 16px 40px rgba(0,0,0,.4);}
+.dd-item{padding:9px 13px;cursor:pointer;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;transition:background .12s;}
+.dd-item:hover{background:var(--bg3);}
+.dd-item:last-child{border-bottom:none;}
+.dd-ticker{font-size:12px;font-weight:700;color:var(--cyan);font-family:'JetBrains Mono',monospace;}
+.dd-name{font-size:11px;color:var(--muted);}
+.stock-header{margin-bottom:16px;}
+.stock-name{font-size:20px;font-weight:700;letter-spacing:-.02em;}
+.stock-sub{font-size:11px;color:var(--muted);margin-top:3px;font-family:'JetBrains Mono',monospace;}
+.stock-price{font-size:32px;font-weight:800;color:var(--cyan);letter-spacing:-.03em;margin-top:8px;}
+.stock-change{font-size:12px;margin-top:3px;font-weight:500;}
+.signal-btns{display:flex;gap:8px;margin-top:12px;}
+.sig-buy{padding:8px 20px;background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3);border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+.sig-buy:hover{background:var(--green);color:white;}
+.sig-sell{padding:8px 20px;background:rgba(244,63,94,.12);color:var(--red);border:1px solid rgba(244,63,94,.3);border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+.sig-sell:hover{background:var(--red);color:white;}
+.sig-hold{padding:8px 20px;background:rgba(251,191,36,.12);color:var(--amber);border:1px solid rgba(251,191,36,.3);border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+.sig-hold:hover{background:var(--amber);color:#161616;}
+.chart-box{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px;}
+.chart-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+.interval-btns{display:flex;gap:3px;}
+.ibtn{padding:4px 10px;border-radius:5px;font-size:11px;font-weight:500;border:1px solid var(--border);color:var(--muted);cursor:pointer;background:none;font-family:'Inter',sans-serif;transition:all .15s;}
+.ibtn:hover{color:var(--text);border-color:var(--border2);}
+.ibtn.active{background:var(--bg3);color:var(--cyan);border-color:var(--cyan);}
+.chart-type-btns{display:flex;gap:3px;}
+.ctbtn{padding:4px 10px;border-radius:5px;font-size:11px;font-weight:500;border:1px solid var(--border);color:var(--muted);cursor:pointer;background:none;font-family:'Inter',sans-serif;transition:all .15s;}
+.ctbtn:hover{color:var(--text);}
+.ctbtn.active{background:var(--bg3);color:var(--purple);border-color:var(--purple);}
+#lw-chart{width:100%;height:320px;}
+.metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
+.metric-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+.metric-card h4{font-size:10px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;}
+.metric-card p{font-size:16px;font-weight:700;}
+.scorecard-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
+.score-item{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;}
+.score-label{font-size:12px;color:var(--text2);}
+.badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;}
+.badge-high{background:rgba(34,197,94,.15);color:var(--green);}
+.badge-avg{background:rgba(251,191,36,.12);color:var(--amber);}
+.badge-low{background:rgba(244,63,94,.12);color:var(--red);}
+.holders-section{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.holders-chart{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.holders-chart h3{font-size:12px;font-weight:600;margin-bottom:12px;}
+.holder-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:11px;color:var(--text2);}
+.holder-row:last-child{border-bottom:none;}
+.news-section{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:16px;}
+.news-section h3{font-size:12px;font-weight:600;margin-bottom:12px;}
+.news-item{padding:9px 0;border-bottom:1px solid var(--border);}
+.news-item:last-child{border-bottom:none;}
+.news-title a{color:var(--text);text-decoration:none;font-size:12px;line-height:1.45;}
+.news-title a:hover{color:var(--cyan);}
+.news-meta{font-size:10px;color:var(--muted);margin-top:3px;font-family:'JetBrains Mono',monospace;}
+.stocks-layout{display:grid;grid-template-columns:1fr 340px;gap:18px;align-items:start;}
+.stocks-main{min-width:0;}
+.stocks-side{position:sticky;top:68px;display:flex;flex-direction:column;gap:0;}
+.stock-agent{background:var(--bg2);border:1px solid var(--border);border-radius:12px;display:flex;flex-direction:column;height:calc(100vh - 90px);}
+.stock-agent-head{padding:11px 14px;border-bottom:1px solid var(--border);font-size:12px;font-weight:600;color:var(--cyan);display:flex;align-items:center;gap:7px;background:var(--bg3);border-radius:12px 12px 0 0;flex-shrink:0;}
+.stock-chat-msgs{flex:1;overflow-y:auto;padding:11px;display:flex;flex-direction:column;gap:6px;}
+.stock-chat-msgs::-webkit-scrollbar{width:3px;}
+.stock-chat-msgs::-webkit-scrollbar-thumb{background:var(--border);}
+.ai-sug{background:var(--bg3);border:1px solid rgba(56,189,248,.2);border-left:3px solid var(--cyan);border-radius:0 8px 8px 0;padding:14px 16px;margin-bottom:16px;}
+.ai-sug-label{font-size:9px;color:var(--cyan);font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:.12em;font-family:'JetBrains Mono',monospace;}
+.ai-sug p{font-size:12px;line-height:1.6;white-space:pre-wrap;color:var(--text2);}
+
+/* ── SETTINGS MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.show{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:14px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;position:relative;}
+.modal::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--purple));border-radius:14px 14px 0 0;}
+.modal::-webkit-scrollbar{width:3px;}
+.modal::-webkit-scrollbar-thumb{background:var(--border);}
+.modal-head{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:1;border-radius:14px 14px 0 0;}
+.modal-head h2{font-size:16px;font-weight:700;}
+.modal-close{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:0;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:all .15s;}
+.modal-close:hover{background:var(--bg3);color:var(--text);}
+.settings-nav{display:flex;gap:2px;padding:10px 14px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.snav-btn{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;border:1px solid transparent;background:none;font-family:'Inter',sans-serif;transition:all .15s;}
+.snav-btn:hover{color:var(--text);}
+.snav-btn.active{background:rgba(56,189,248,.1);color:var(--cyan);border-color:rgba(56,189,248,.2);}
+.settings-section{display:none;padding:20px 22px;}
+.settings-section.active{display:block;}
+.settings-section h3{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;}
+.sfield{margin-bottom:14px;}
+.sfield label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
+.sfield input,.sfield select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:13px;outline:none;font-family:'Inter',sans-serif;transition:border-color .15s;}
+.sfield input:focus,.sfield select:focus{border-color:var(--cyan);}
+.sfield input::placeholder{color:var(--muted);}
+.save-btn{padding:9px 20px;background:linear-gradient(135deg,var(--cyan2),var(--blue));border:none;border-radius:6px;color:white;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity .15s;}
+.save-btn:hover{opacity:.9;}
+.save-msg{font-size:11px;margin-top:8px;min-height:16px;}
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border);}
+.toggle-row:last-child{border-bottom:none;}
+.toggle-label{font-size:13px;color:var(--text);}
+.toggle-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.toggle{position:relative;width:40px;height:22px;cursor:pointer;}
+.toggle input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;inset:0;background:var(--bg3);border-radius:22px;border:1px solid var(--border);transition:.2s;}
+.toggle-slider:before{content:"";position:absolute;width:16px;height:16px;left:2px;top:2px;background:var(--muted);border-radius:50%;transition:.2s;}
+.toggle input:checked+.toggle-slider{background:rgba(14,165,233,.2);border-color:var(--cyan);}
+.toggle input:checked+.toggle-slider:before{transform:translateX(18px);background:var(--cyan);}
+.report-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px;}
+.report-card h4{font-size:13px;font-weight:600;margin-bottom:3px;}
+.report-card p{font-size:11px;color:var(--muted);margin-bottom:10px;}
+.dl-btn{padding:6px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:5px;color:var(--cyan);font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+.dl-btn:hover{background:var(--cyan);color:white;border-color:var(--cyan);}
+.danger-btn{width:100%;padding:9px;background:transparent;border:1px solid rgba(244,63,94,.3);border-radius:6px;color:var(--red);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;margin-top:6px;transition:all .15s;}
+.danger-btn:hover{background:rgba(244,63,94,.1);}
+#import-dropzone{border:2px dashed var(--border);border-radius:10px;padding:36px;text-align:center;cursor:pointer;transition:border-color .2s;margin-bottom:14px;}
+#import-dropzone:hover{border-color:var(--cyan);}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="auth-page">
+<div class="auth-wrap">
+  <div class="auth-box">
+    <div style="text-align:center;margin-bottom:24px;">
+      <svg width="44" height="44" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;margin-bottom:10px;">
+        <rect width="32" height="32" rx="7" fill="#070F1E"/>
+        <rect x="1.5" y="1.5" width="29" height="29" rx="5.5" fill="none" stroke="#38BDF8" stroke-width="1.5"/>
+        <path d="M8 24 L16 8 L24 24" stroke="#22C55E" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="16" cy="8" r="2" fill="#38BDF8"/>
+      </svg>
+      <div style="font-size:26px;font-weight:900;background:linear-gradient(90deg,#38BDF8,#22C55E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.15em;">SENRA</div>
+      <div style="font-size:11px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-top:3px;">Finance Intelligence</div>
+    </div>
+    <div class="auth-tab-row">
+      <div class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Login</div>
+      <div class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Register</div>
+    </div>
+    <div id="login-form">
+      <div class="field"><label>Email</label><input id="l-email" type="email" placeholder="you@email.com"></div>
+      <div class="field"><label>Password</label><div class="pw-wrap"><input id="l-pass" type="password" placeholder="••••••••"><button class="eye-btn" type="button" onclick="toggleEye('l-pass','l-eye')" id="l-eye">👁</button></div></div>
+      <div class="remember-row"><input type="checkbox" id="remember-me"><label for="remember-me">Remember me</label></div>
+      <button class="auth-btn" onclick="doLogin()">Login to SENRA</button>
+    </div>
+    <div id="register-form" style="display:none">
+      <div class="field"><label>Full Name</label><input id="r-name" placeholder="Your full name"></div>
+      <div class="field"><label>Email</label><input id="r-email" type="email" placeholder="you@email.com"></div>
+      <div class="field"><label>WhatsApp</label><input id="r-whatsapp" placeholder="+91 98765 43210"></div>
+      <div class="field"><label>Country</label><select id="r-country"><option value="India">India</option><option value="United States">United States</option><option value="United Kingdom">United Kingdom</option><option value="Europe">Europe</option><option value="Japan">Japan</option><option value="Australia">Australia</option><option value="Canada">Canada</option><option value="Singapore">Singapore</option><option value="UAE">UAE</option></select></div>
+      <div class="field"><label>Password</label><div class="pw-wrap"><input id="r-pass" type="password" placeholder="Choose a password"><button class="eye-btn" type="button" onclick="toggleEye('r-pass','r-eye')" id="r-eye">👁</button></div></div>
+      <button class="auth-btn" onclick="doRegister()">Create Account</button>
+    </div>
+    <div class="auth-err" id="auth-err"></div>
+  </div>
+</div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+<nav>
+  <div class="nav-left">
+    <div class="nav-logo-area" onclick="showPage('home',document.querySelectorAll('.nav-link')[0])">
+      <svg width="26" height="26" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <rect width="32" height="32" rx="7" fill="#070F1E"/>
+        <rect x="1.5" y="1.5" width="29" height="29" rx="5.5" fill="none" stroke="#38BDF8" stroke-width="1.5"/>
+        <path d="M8 24 L16 8 L24 24" stroke="#22C55E" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="16" cy="8" r="2" fill="#38BDF8"/>
+      </svg>
+      <div class="nav-logo-text">
+        <span class="nav-logo-name">SENRA</span>
+        <span class="nav-logo-sub">Finance Intelligence</span>
+      </div>
+    </div>
+    <div class="nav-links">
+      <button class="nav-link active" onclick="showPage('home',this)">Home</button>
+      <button class="nav-link" onclick="showPage('portfolio',this)">Portfolio</button>
+      <button class="nav-link" onclick="showPage('stocks',this)">Stocks</button>
+    </div>
+  </div>
+  <div class="nav-right">
+    <span class="cur-badge" id="cur-badge">₹ INR</span>
+    <button class="nav-icon-btn" onclick="openSettings()" title="Settings">⚙</button>
+    <div class="user-btn" id="user-btn" onclick="toggleDD()">SD</div>
+    <div class="user-dd" id="user-dd">
+      <div class="ud-header">
+        <div class="ud-name" id="ud-name">—</div>
+        <div class="ud-email" id="ud-email">—</div>
+      </div>
+      <div class="ud-row"><span class="ud-lbl">Country</span><span class="ud-val" id="ud-country">—</span></div>
+      <div class="ud-row"><span class="ud-lbl">Currency</span><span class="ud-val" id="ud-currency">—</span></div>
+      <div class="ud-row"><span class="ud-lbl">WhatsApp</span><span class="ud-val" id="ud-wa">—</span></div>
+      <button class="logout-btn" onclick="doLogout()">Sign out</button>
+    </div>
+  </div>
+</nav>
+
+<div class="ticker-band" id="ticker-band"><div class="band-inner" id="band-inner">Loading...</div></div>
+
+<!-- HOME -->
+<div class="page active" id="home">
+  <div class="home-grid">
+    <div>
+      <div class="section-label">All time</div>
+      <div class="cards-row c4">
+        <div class="card"><h3>Earned</h3><p id="d-income" style="color:var(--green)">-</p></div>
+        <div class="card"><h3>Spent</h3><p id="d-expenses" style="color:var(--red)">-</p></div>
+        <div class="card"><h3>Saved</h3><p id="d-savings" style="color:var(--cyan)">-</p></div>
+        <div class="card"><h3>Invested</h3><p id="d-invested" style="color:var(--purple)">-</p></div>
+      </div>
+      <div class="section-label">This month</div>
+      <div class="cards-row c3">
+        <div class="card"><h3>Earned</h3><p id="m-income" style="color:var(--green)">-</p></div>
+        <div class="card"><h3>Spent</h3><p id="m-expenses" style="color:var(--red)">-</p></div>
+        <div class="card"><h3>Saved</h3><p id="m-saved" style="color:var(--cyan)">-</p></div>
+      </div>
+      <div class="box">
+        <h3>Monthly Breakdown</h3>
+        <table><thead><tr><th>Month</th><th>Income</th><th>Expenses</th><th>Saved</th><th>Status</th></tr></thead><tbody id="monthly-breakdown"></tbody></table>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="box" style="margin-bottom:0"><h3>Income by Source</h3><table><thead><tr><th>Source</th><th>Total</th></tr></thead><tbody id="income-source"></tbody></table></div>
+        <div class="box" style="margin-bottom:0"><h3>Expenses by Category</h3><table><thead><tr><th>Category</th><th>Total</th></tr></thead><tbody id="expense-cat"></tbody></table></div>
+      </div>
+    </div>
+    <div class="agent-panel">
+      <div class="agent-head"><div class="agent-av">S</div><div><div class="agent-nm">SENRA Agent</div><div class="agent-st">● Online</div></div></div>
+      <div class="chat-msgs" id="chat-msgs"><div class="msg ai"><div class="msg-lbl">SENRA</div>Ready. "spent 500 food" · "salary 50000" · "bought 10 AAPL 250"</div></div>
+      <div class="typing" id="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      <div class="quick-row">
+        <button class="qbtn" onclick="qs('summary')">Summary</button>
+        <button class="qbtn" onclick="qs('this month')">Month</button>
+        <button class="qbtn" onclick="qs('top expenses')">Expenses</button>
+        <button class="qbtn" onclick="qs('savings')">Savings</button>
+      </div>
+      <div class="chat-in-row">
+        <input class="chat-in" id="chat-in" placeholder="Tell SENRA..." onkeydown="if(event.key==='Enter')sendMsg()">
+        <button class="send-btn" onclick="sendMsg()">→</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PORTFOLIO -->
+<div class="page" id="portfolio">
+  <div class="section-label" style="padding-top:0">Your Portfolio</div>
+  <div class="cards-row c3" style="margin-bottom:20px;">
+    <div class="card"><h3>Total Invested</h3><p id="p-invested" style="color:var(--purple)">-</p></div>
+    <div class="card"><h3>Current Value</h3><p id="p-value" style="color:var(--cyan)">-</p></div>
+    <div class="card"><h3>Total P&L</h3><p id="p-pnl">-</p></div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('t-earn',this)">Earnings</div>
+    <div class="tab" onclick="switchTab('t-spend',this)">Spendings</div>
+    <div class="tab" onclick="switchTab('t-stocks',this)">Stocks</div>
+    <div class="tab" onclick="switchTab('t-import',this)">Import File</div>
+  </div>
+  <div class="tab-content active" id="t-earn">
+    <div class="box"><h3>Add Income</h3>
+      <div class="form-row">
+        <input class="fin" type="date" id="inc-date">
+        <input class="fin" type="number" placeholder="Amount" id="inc-amount">
+        <select class="fin" id="inc-source"><option value="Salary">Salary</option><option value="Pocket Money">Pocket Money</option><option value="Freelance">Freelance</option><option value="Trading Profits">Trading Profits</option><option value="Other">Other</option></select>
+        <input class="fin" placeholder="Note" id="inc-note">
+        <button class="btn btn-g" onclick="addIncome()">Add</button>
+      </div>
+      <table><thead><tr><th>Date</th><th>Amount</th><th>Source</th><th>Note</th><th></th></tr></thead><tbody id="income-table"></tbody></table>
+    </div>
+  </div>
+  <div class="tab-content" id="t-spend">
+    <div class="box"><h3>Add Expense</h3>
+      <div class="form-row">
+        <input class="fin" type="date" id="exp-date">
+        <input class="fin" type="number" placeholder="Amount" id="exp-amount">
+        <input class="fin" placeholder="Category" id="exp-category">
+        <input class="fin" placeholder="Note" id="exp-note">
+        <button class="btn btn-g" onclick="addExpense()">Add</button>
+      </div>
+      <table><thead><tr><th>Date</th><th>Amount</th><th>Category</th><th>Note</th><th></th></tr></thead><tbody id="expense-table"></tbody></table>
+    </div>
+  </div>
+  <div class="tab-content" id="t-stocks">
+    <div class="box"><h3>Add Stock to Portfolio</h3>
+      <div class="form-row">
+        <div style="position:relative;">
+          <input class="fin" placeholder="Search stock — WIPRO, BHEL, RELIANCE..." id="port-ticker" oninput="searchPortStock()" autocomplete="off" style="min-width:240px;">
+          <div id="port-dd" style="display:none;position:absolute;top:100%;left:0;background:var(--bg2);border:1px solid var(--border);border-radius:8px;z-index:200;max-height:220px;overflow-y:auto;min-width:280px;box-shadow:0 16px 40px rgba(0,0,0,.4);"></div>
+        </div>
+        <input class="fin" type="number" placeholder="Buy Price" id="port-price">
+        <input class="fin" type="number" placeholder="Quantity" id="port-qty">
+        <input class="fin" type="date" id="port-date">
+        <input class="fin" placeholder="Note" id="port-note">
+        <button class="btn btn-p" onclick="addStock()">Add Stock</button>
+      </div>
+      <div class="cards-row c4" style="margin-bottom:14px;">
+        <div class="card"><h3>Invested</h3><p id="pp-invested" style="color:var(--purple)">-</p></div>
+        <div class="card"><h3>Current Value</h3><p id="pp-value" style="color:var(--cyan)">-</p></div>
+        <div class="card"><h3>P&L</h3><p id="pp-pnl">-</p></div>
+        <div class="card"><h3>P&L %</h3><p id="pp-pct">-</p></div>
+      </div>
+      <table><thead><tr><th>Ticker</th><th>Qty</th><th>Buy</th><th>Current</th><th>Invested</th><th>Value</th><th>P&L</th><th>%</th><th></th></tr></thead><tbody id="portfolio-table"></tbody></table>
+    </div>
+  </div>
+  <div class="tab-content" id="t-import">
+    <div class="box"><h3>Import from File</h3>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:16px;">Upload a CSV or Excel file from your bank, Zerodha, Groww, or any finance app. SENRA will auto-detect expenses and income.</p>
+      <div id="import-dropzone" onclick="document.getElementById('import-file').click()">
+        <div style="font-size:28px;margin-bottom:8px;">📂</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Click to upload or drag & drop</div>
+        <div style="font-size:11px;color:var(--muted);">Supports CSV, XLSX, XLS — bank statements, Zerodha, Groww</div>
+        <input type="file" id="import-file" accept=".csv,.xlsx,.xls" style="display:none" onchange="previewImport(this)">
+      </div>
+      <div id="import-preview" style="display:none">
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:12px;">
+          <div style="font-size:12px;font-weight:600;margin-bottom:10px;color:var(--cyan);">Preview — what will be imported</div>
+          <div class="cards-row c3" style="margin-bottom:12px;">
+            <div class="card"><h3>Rows Found</h3><p id="imp-rows">-</p></div>
+            <div class="card"><h3>Expenses</h3><p id="imp-exp" style="color:var(--red)">-</p></div>
+            <div class="card"><h3>Income</h3><p id="imp-inc" style="color:var(--green)">-</p></div>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;">Sample Expenses</div>
+          <table style="margin-bottom:10px;"><thead><tr><th>Date</th><th>Amount</th><th>Category</th><th>Note</th></tr></thead><tbody id="imp-exp-table"></tbody></table>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;">Sample Income</div>
+          <table><thead><tr><th>Date</th><th>Amount</th><th>Source</th><th>Note</th></tr></thead><tbody id="imp-inc-table"></tbody></table>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-g" onclick="confirmImport()" style="flex:1;padding:11px;">✓ Import All</button>
+          <button class="btn" onclick="resetImport()" style="background:var(--bg3);color:var(--muted);flex:1;padding:11px;">Cancel</button>
+        </div>
+      </div>
+      <div id="import-success" style="display:none;text-align:center;padding:28px;">
+        <div style="font-size:36px;margin-bottom:10px;">✅</div>
+        <div style="font-size:15px;font-weight:700;color:var(--green);margin-bottom:6px;" id="imp-success-msg">Imported!</div>
+        <button class="btn btn-g" onclick="resetImport()" style="margin-top:10px;padding:9px 22px;">Import Another</button>
+      </div>
+      <div style="margin-top:20px;padding-top:14px;border-top:1px solid var(--border);">
+        <div style="font-size:10px;color:var(--muted);font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;">Supported formats</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <span style="font-size:11px;background:var(--bg3);padding:3px 10px;border-radius:20px;border:1px solid var(--border);color:var(--text2);">📊 Bank CSV</span>
+          <span style="font-size:11px;background:var(--bg3);padding:3px 10px;border-radius:20px;border:1px solid var(--border);color:var(--text2);">📊 HDFC/ICICI/SBI</span>
+          <span style="font-size:11px;background:var(--bg3);padding:3px 10px;border-radius:20px;border:1px solid var(--border);color:var(--text2);">📊 Zerodha P&L</span>
+          <span style="font-size:11px;background:var(--bg3);padding:3px 10px;border-radius:20px;border:1px solid var(--border);color:var(--text2);">📊 Groww export</span>
+          <span style="font-size:11px;background:var(--bg3);padding:3px 10px;border-radius:20px;border:1px solid var(--border);color:var(--text2);">📊 Any Excel</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STOCKS -->
+<div class="page" id="stocks">
+  <div style="display:flex;gap:10px;margin-bottom:18px;">
+    <div class="search-wrap">
+      <input class="s-input" id="ticker-input" placeholder="Type any stock — WIPRO, BHEL, RELIANCE, AAPL..." oninput="searchStocks()" onkeydown="if(event.key==='Enter')lookupStock()">
+      <div class="dropdown" id="search-dropdown"></div>
+    </div>
+    <button class="s-btn" onclick="lookupStock()">Search</button>
+  </div>
+  <div id="stock-result" style="display:none">
+    <div class="stocks-layout">
+      <div class="stocks-main">
+        <div class="stock-header">
+          <div class="stock-name" id="s-name">—</div>
+          <div class="stock-sub" id="s-sub">—</div>
+          <div class="stock-price" id="s-price">—</div>
+          <div class="stock-change" id="s-change">—</div>
+          <div>
+            <div class="signal-btns" id="signal-btns"><button class="sig-hold" id="sig-btn">ANALYZING</button></div>
+            <div style="font-size:11px;color:var(--muted);margin-top:5px;" id="sig-reason">—</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px;">Entry: <span id="sig-entry" style="color:var(--cyan);font-family:'JetBrains Mono',monospace;">—</span> · Risk: <span id="sig-risk">—</span></div>
+          </div>
+        </div>
+        <div class="chart-box">
+          <div class="chart-controls">
+            <div class="interval-btns">
+              <button class="ibtn" onclick="changeInterval('1m',this)">1m</button>
+              <button class="ibtn" onclick="changeInterval('5m',this)">5m</button>
+              <button class="ibtn" onclick="changeInterval('15m',this)">15m</button>
+              <button class="ibtn" onclick="changeInterval('1h',this)">1H</button>
+              <button class="ibtn active" onclick="changeInterval('1d',this)">1D</button>
+              <button class="ibtn" onclick="changeInterval('1wk',this)">1W</button>
+              <button class="ibtn" onclick="changeInterval('1mo',this)">1M</button>
+            </div>
+            <div class="chart-type-btns">
+              <button class="ctbtn active" onclick="changeChartType('line',this)">Line</button>
+              <button class="ctbtn" onclick="changeChartType('candle',this)">Candles</button>
+            </div>
+          </div>
+          <div id="lw-chart"></div>
+        </div>
+        <div class="metrics-grid" id="metrics-grid"></div>
+        <div class="section-label">Scorecard</div>
+        <div class="scorecard-grid" id="scorecard-grid"></div>
+        <div class="holders-section">
+          <div class="holders-chart">
+            <h3>Shareholding Pattern</h3>
+            <canvas id="holders-pie" height="160"></canvas>
+            <div id="holders-legend" style="margin-top:10px;"></div>
+          </div>
+          <div class="holders-chart">
+            <h3>Key Metrics</h3>
+            <div id="key-metrics-list"></div>
+          </div>
+        </div>
+        <div class="news-section" id="news-section">
+          <h3>Latest News</h3>
+          <div id="news-list"><div style="color:var(--muted);font-size:12px;">Loading news...</div></div>
+        </div>
+      </div>
+      <div class="stocks-side">
+        <div class="stock-agent">
+          <div class="stock-agent-head"><div class="agent-av" style="width:22px;height:22px;font-size:9px;border-radius:4px;">S</div>SENRA Stock Agent</div>
+          <div class="stock-chat-msgs" id="stock-chat-msgs"><div class="msg ai"><div class="msg-lbl">SENRA</div>Search a stock. Buy/sell/hold in 2 lines.</div></div>
+          <div class="typing" id="stock-typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <div class="quick-row">
+            <button class="qbtn" onclick="sqt('buy or not?')">Buy?</button>
+            <button class="qbtn" onclick="sqt('overvalued?')">Valued?</button>
+            <button class="qbtn" onclick="sqt('risk level?')">Risk?</button>
+            <button class="qbtn" onclick="sqt('entry price?')">Entry?</button>
+          </div>
+          <div class="chat-in-row">
+            <input class="chat-in" id="stock-chat-in" placeholder="Ask about this stock..." onkeydown="if(event.key==='Enter')sendStockMsg()">
+            <button class="send-btn" onclick="sendStockMsg()">→</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal">
+    <div class="modal-head"><h2>Settings</h2><button class="modal-close" onclick="closeSettings()">✕</button></div>
+    <div class="settings-nav">
+      <button class="snav-btn active" onclick="switchSettings('s-profile',this)">Profile</button>
+      <button class="snav-btn" onclick="switchSettings('s-password',this)">Password</button>
+      <button class="snav-btn" onclick="switchSettings('s-country',this)">Country & Currency</button>
+      <button class="snav-btn" onclick="switchSettings('s-appearance',this)">Appearance</button>
+      <button class="snav-btn" onclick="switchSettings('s-reports',this)">Reports</button>
+    </div>
+    <div class="settings-section active" id="s-profile">
+      <h3>Personal Info</h3>
+      <div class="sfield"><label>Full Name</label><input id="set-name" placeholder="Your full name"></div>
+      <div class="sfield"><label>WhatsApp</label><input id="set-whatsapp" placeholder="+91 98765 43210"></div>
+      <div class="sfield"><label>Email</label><input id="set-email" type="email" placeholder="you@email.com"></div>
+      <button class="save-btn" onclick="saveProfile()">Save Changes</button>
+      <div class="save-msg" id="profile-msg"></div>
+    </div>
+    <div class="settings-section" id="s-password">
+      <h3>Change Password</h3>
+      <div class="sfield"><label>Current Password</label><div class="pw-wrap"><input id="set-cur-pass" type="password" placeholder="••••••••"><button class="eye-btn" onclick="toggleEye('set-cur-pass','eye-cur')">👁</button></div></div>
+      <div class="sfield"><label>New Password</label><div class="pw-wrap"><input id="set-new-pass" type="password" placeholder="••••••••"><button class="eye-btn" onclick="toggleEye('set-new-pass','eye-new')">👁</button></div></div>
+      <div class="sfield"><label>Confirm Password</label><div class="pw-wrap"><input id="set-conf-pass" type="password" placeholder="••••••••"><button class="eye-btn" onclick="toggleEye('set-conf-pass','eye-conf')">👁</button></div></div>
+      <button class="save-btn" onclick="savePassword()">Update Password</button>
+      <div class="save-msg" id="password-msg"></div>
+    </div>
+    <div class="settings-section" id="s-country">
+      <h3>Country & Currency</h3>
+      <div class="sfield"><label>Country</label>
+        <select id="set-country" onchange="updateCurrencyPreview()">
+          <option value="India">India — ₹ INR</option>
+          <option value="United States">United States — $ USD</option>
+          <option value="United Kingdom">United Kingdom — £ GBP</option>
+          <option value="Europe">Europe — € EUR</option>
+          <option value="Japan">Japan — ¥ JPY</option>
+          <option value="Australia">Australia — A$ AUD</option>
+          <option value="Canada">Canada — C$ CAD</option>
+          <option value="Singapore">Singapore — S$ SGD</option>
+          <option value="UAE">UAE — AED</option>
+        </select>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:11px;margin-bottom:14px;font-size:12px;color:var(--text2);">
+        Currency will update to: <span id="currency-preview" style="color:var(--cyan);font-weight:600;">₹ INR</span>
+      </div>
+      <button class="save-btn" onclick="saveCountry()">Save</button>
+      <div class="save-msg" id="country-msg"></div>
+    </div>
+    <div class="settings-section" id="s-appearance">
+      <h3>Appearance</h3>
+      <div class="toggle-row"><div><div class="toggle-label">Dark Mode</div><div class="toggle-sub">Dark background (current)</div></div><label class="toggle"><input type="checkbox" id="toggle-dark" checked onchange="toggleTheme()"><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><div><div class="toggle-label">Compact View</div><div class="toggle-sub">Smaller cards and less padding</div></div><label class="toggle"><input type="checkbox" id="toggle-compact" onchange="toggleCompact()"><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><div><div class="toggle-label">Ticker Band</div><div class="toggle-sub">Show scrolling stock prices</div></div><label class="toggle"><input type="checkbox" id="toggle-band" checked onchange="toggleBandPref()"><span class="toggle-slider"></span></label></div>
+    </div>
+    <div class="settings-section" id="s-reports">
+      <h3>Download Reports</h3>
+      <div class="report-card"><h4>Monthly Summary</h4><p>Income, expenses, savings breakdown</p><div style="display:flex;gap:8px;align-items:center;"><select class="fin" id="report-month" style="font-size:11px;padding:6px 10px;"><option value="current">This Month</option><option value="last">Last Month</option><option value="all">All Time</option></select><button class="dl-btn" onclick="downloadReport('summary')">⬇ Download CSV</button></div></div>
+      <div class="report-card"><h4>Expense Report</h4><p>All expenses with categories and dates</p><button class="dl-btn" onclick="downloadReport('expenses')">⬇ Download CSV</button></div>
+      <div class="report-card"><h4>Income Report</h4><p>All income entries by source</p><button class="dl-btn" onclick="downloadReport('income')">⬇ Download CSV</button></div>
+      <div class="report-card"><h4>Portfolio Report</h4><p>Stock holdings with P&L</p><button class="dl-btn" onclick="downloadReport('portfolio')">⬇ Download CSV</button></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+const API = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost"
+  ? "http://127.0.0.1:8080"
+  : window.location.origin
+let USER=null,TOKEN=null,CURRENCY="₹",EXCHANGE_RATE=1
+let chatHistory=[],stockChatHistory=[]
+let lwChart=null,lwSeries=null,pieChart=null
+let currentTicker=null,currentInterval="1d",currentChartType="line"
+let currentStockData=null,searchTimer=null,portSearchTimer=null
+let liveRefreshTimer=null
+
+const SYMS={"INR":"₹","USD":"$","GBP":"£","EUR":"€","JPY":"¥","AUD":"A$","CAD":"C$","SGD":"S$","HKD":"HK$"}
+function cv(n){return(parseFloat(n||0)*EXCHANGE_RATE).toFixed(2)}
+function fmt(n){return CURRENCY+cv(n)}
+function fmtStock(val){
+  if(!val||val==="N/A"||isNaN(parseFloat(val)))return"N/A"
+  const cur=(currentStockData?.currency||"USD").toUpperCase()
+  if(cur==="USD")return fmt(val)
+  return(SYMS[cur]||cur+" ")+parseFloat(val).toFixed(2)
+}
+function toggleEye(iid,bid){const inp=document.getElementById(iid);inp.type=inp.type==="text"?"password":"text";document.getElementById(bid).style.color=inp.type==="text"?"var(--cyan)":"var(--muted)"}
+async function fetchRate(code){
+  if(!code||code.toLowerCase()==="usd"||code.toLowerCase()==="inr"){EXCHANGE_RATE=1;updateBadge();return}
+  try{const r=await fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json");const d=await r.json();EXCHANGE_RATE=d.usd[code.toLowerCase()]||1;updateBadge()}catch{EXCHANGE_RATE=1}
+}
+function updateBadge(){if(USER)document.getElementById("cur-badge").textContent=USER.currency_symbol+" "+USER.currency}
+function switchAuthTab(tab){
+  document.getElementById("login-form").style.display=tab==="login"?"block":"none"
+  document.getElementById("register-form").style.display=tab==="register"?"block":"none"
+  document.getElementById("tab-login").classList.toggle("active",tab==="login")
+  document.getElementById("tab-register").classList.toggle("active",tab==="register")
+  document.getElementById("auth-err").style.display="none"
+}
+function showErr(msg){const e=document.getElementById("auth-err");e.textContent=msg;e.style.display="block"}
+function checkRememberMe(){const s=localStorage.getItem("senra_email");if(s){document.getElementById("l-email").value=s;document.getElementById("remember-me").checked=true}}
+async function doLogin(){
+  const email=document.getElementById("l-email").value.trim(),pass=document.getElementById("l-pass").value
+  if(!email||!pass)return showErr("Fill all fields")
+  try{
+    const r=await fetch(`${API}/auth/login`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,password:pass})})
+    const d=await r.json()
+    if(!r.ok)return showErr(d.detail||"Login failed")
+    if(document.getElementById("remember-me").checked)localStorage.setItem("senra_email",email)
+    else localStorage.removeItem("senra_email")
+    await initUser(d)
+  }catch{showErr("Server error. Make sure SENRA API is running.")}
+}
+async function doRegister(){
+  const full_name=document.getElementById("r-name").value.trim(),email=document.getElementById("r-email").value.trim()
+  const whatsapp=document.getElementById("r-whatsapp").value.trim(),country=document.getElementById("r-country").value
+  const password=document.getElementById("r-pass").value
+  if(!full_name||!email||!password)return showErr("Fill all required fields")
+  try{
+    const r=await fetch(`${API}/auth/register`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({full_name,email,whatsapp,country,password})})
+    const d=await r.json()
+    if(!r.ok)return showErr(d.detail||"Registration failed")
+    await initUser(d)
+  }catch{showErr("Server error. Make sure SENRA API is running.")}
+}
+async function initUser(data){
+  USER=data.user;TOKEN=data.token;CURRENCY=USER.currency_symbol
+  await fetchRate(USER.currency)
+  localStorage.setItem("senra_token",TOKEN)
+  document.getElementById("auth-page").style.display="none"
+  document.getElementById("app").style.display="block"
+  const ini=USER.full_name.split(" ").map(n=>n[0]).join("").toUpperCase().slice(0,2)
+  document.getElementById("user-btn").textContent=ini
+  document.getElementById("ud-name").textContent=USER.full_name
+  document.getElementById("ud-email").textContent=USER.email
+  document.getElementById("ud-country").textContent=USER.country
+  document.getElementById("ud-currency").textContent=USER.currency+" "+USER.currency_symbol
+  document.getElementById("ud-wa").textContent=USER.whatsapp||"—"
+  updateBadge();loadTickerBand();loadDashboard();setTimeout(setDefaultDates,500)
+}
+function doLogout(){localStorage.removeItem("senra_token");USER=null;TOKEN=null;document.getElementById("app").style.display="none";document.getElementById("auth-page").style.display="block";document.getElementById("user-dd").classList.remove("show")}
+function toggleDD(){document.getElementById("user-dd").classList.toggle("show")}
+document.addEventListener("click",e=>{
+  const btn=document.getElementById("user-btn"),dd=document.getElementById("user-dd")
+  if(btn&&dd&&!btn.contains(e.target)&&!dd.contains(e.target))dd.classList.remove("show")
+  if(!e.target.closest(".search-wrap"))document.getElementById("search-dropdown").style.display="none"
+  const _pt=document.getElementById("port-ticker"),_pd=document.getElementById("port-dd")
+  if(_pd&&_pt&&!_pt.contains(e.target)&&!_pd.contains(e.target))_pd.style.display="none"
+})
+async function tryAutoLogin(){
+  const token=localStorage.getItem("senra_token")
+  if(!token)return
+  try{const r=await fetch(`${API}/auth/me?token=${token}`);const d=await r.json();if(r.ok)await initUser({user:d,token})}catch{}
+}
+function showPage(name,el){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"))
+  document.querySelectorAll(".nav-link").forEach(l=>l.classList.remove("active"))
+  document.getElementById(name).classList.add("active");el.classList.add("active")
+  if(name==="home")loadDashboard()
+  if(name==="portfolio"){loadIncome();loadExpenses();loadPortfolio();setTimeout(setDefaultDates,100)}
+  document.getElementById("ticker-band").style.display=name==="stocks"?"block":"none"
+  stopLiveRefresh()
+}
+function switchTab(id,el){
+  document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"))
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"))
+  document.getElementById(id).classList.add("active");el.classList.add("active")
+  setTimeout(setDefaultDates,50)
+}
+function setDefaultDates(){
+  const today=new Date().toISOString().split('T')[0]
+  ;['inc-date','exp-date','port-date'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=today})
+}
+async function loadTickerBand(){
+  try{
+    const country=USER?.country||"United States"
+    const r=await fetch(`${API}/stocks/band/prices?country=${encodeURIComponent(country)}`)
+    const data=await r.json()
+    if(!data.length)return
+    let html=""
+    data.forEach(s=>{
+      const c=s.change_pct>=0?"var(--green)":"var(--red)",arr=s.change_pct>=0?"▲":"▼",sym=SYMS[s.currency]||"$"
+      html+=`<span style="font-size:11px;padding:0 18px;color:var(--text2);font-weight:600;font-family:'JetBrains Mono',monospace">${s.ticker} <span style="color:var(--cyan)">${sym}${s.price.toFixed(2)}</span> <span style="color:${c}">${arr}${Math.abs(s.change_pct).toFixed(2)}%</span></span>`
+    })
+    document.getElementById("band-inner").innerHTML=html+html
+  }catch{}
+}
+async function loadDashboard(){
+  try{
+    const r=await fetch(`${API}/dashboard/overview`),d=await r.json()
+    document.getElementById("d-income").textContent=fmt(d.all_time.total_income)
+    document.getElementById("d-expenses").textContent=fmt(d.all_time.total_expenses)
+    document.getElementById("d-savings").textContent=fmt(d.all_time.savings)
+    document.getElementById("d-invested").textContent=fmt(d.all_time.total_invested)
+    document.getElementById("m-income").textContent=fmt(d.this_month.income)
+    document.getElementById("m-expenses").textContent=fmt(d.this_month.expenses)
+    document.getElementById("m-saved").textContent=fmt(d.this_month.saved)
+    const mb=document.getElementById("monthly-breakdown");mb.innerHTML=""
+    d.monthly_breakdown.forEach(row=>{const c=row.saved>=0?"var(--green)":"var(--red)";mb.innerHTML+=`<tr><td>${row.month}</td><td style="color:var(--green)">${fmt(row.income)}</td><td style="color:var(--red)">${fmt(row.expenses)}</td><td style="color:var(--cyan)">${fmt(row.saved)}</td><td style="color:${c}">${row.saved>=0?"+":""}${fmt(row.saved)}</td></tr>`})
+    const ist=document.getElementById("income-source");ist.innerHTML=""
+    d.income_by_source.forEach(r=>ist.innerHTML+=`<tr><td>${r.source}</td><td style="color:var(--green)">${fmt(r.total)}</td></tr>`)
+    const ect=document.getElementById("expense-cat");ect.innerHTML=""
+    d.expenses_by_category.forEach(r=>ect.innerHTML+=`<tr><td>${r.category}</td><td style="color:var(--red)">${fmt(r.total)}</td></tr>`)
+  }catch(e){console.error(e)}
+}
+async function loadIncome(){const r=await fetch(`${API}/income/`);const data=await r.json();const t=document.getElementById("income-table");t.innerHTML="";data.forEach(i=>t.innerHTML+=`<tr><td>${i.date}</td><td style="color:var(--green)">${fmt(i.amount)}</td><td>${i.source}</td><td>${i.note}</td><td><button class="del" onclick="delIncome(${i.id})">✕</button></td></tr>`)}
+async function addIncome(){const date=document.getElementById("inc-date").value,amount=parseFloat(document.getElementById("inc-amount").value),source=document.getElementById("inc-source").value,note=document.getElementById("inc-note").value;if(!date||!amount)return alert("Fill date and amount");await fetch(`${API}/income/`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({date,amount,source,note})});loadIncome();loadDashboard()}
+async function delIncome(id){await fetch(`${API}/income/${id}`,{method:"DELETE"});loadIncome();loadDashboard()}
+async function loadExpenses(){const r=await fetch(`${API}/expenses/`);const data=await r.json();const t=document.getElementById("expense-table");t.innerHTML="";data.forEach(e=>t.innerHTML+=`<tr><td>${e.date}</td><td style="color:var(--red)">${fmt(e.amount)}</td><td>${e.category}</td><td>${e.note}</td><td><button class="del" onclick="delExpense(${e.id})">✕</button></td></tr>`)}
+async function addExpense(){const date=document.getElementById("exp-date").value,amount=parseFloat(document.getElementById("exp-amount").value),category=document.getElementById("exp-category").value,note=document.getElementById("exp-note").value;if(!date||!amount||!category)return alert("Fill all fields");await fetch(`${API}/expenses/`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({date,amount,category,note})});loadExpenses();loadDashboard()}
+async function delExpense(id){await fetch(`${API}/expenses/${id}`,{method:"DELETE"});loadExpenses();loadDashboard()}
+async function loadPortfolio(){
+  try{
+    const r=await fetch(`${API}/portfolio/live`);const data=await r.json()
+    if(!data.holdings||!data.holdings.length)return
+    document.getElementById("p-invested").textContent=fmt(data.total_invested)
+    document.getElementById("p-value").textContent=fmt(data.total_current_value)
+    document.getElementById("pp-invested").textContent=fmt(data.total_invested)
+    document.getElementById("pp-value").textContent=fmt(data.total_current_value)
+    const pnl=data.total_pnl
+    ;["p-pnl","pp-pnl"].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent=fmt(pnl);el.style.color=pnl>=0?"var(--green)":"var(--red)"}})
+    const pctEl=document.getElementById("pp-pct");if(pctEl){pctEl.textContent=data.total_pnl_pct.toFixed(2)+"%";pctEl.style.color=data.total_pnl_pct>=0?"var(--green)":"var(--red)"}
+    const t=document.getElementById("portfolio-table");t.innerHTML=""
+    data.holdings.forEach(s=>{const c=s.pnl>=0?"var(--green)":"var(--red)";t.innerHTML+=`<tr><td style="color:var(--cyan);font-weight:700;font-family:'JetBrains Mono',monospace">${s.ticker}</td><td>${s.quantity}</td><td>${fmt(s.buy_price)}</td><td>${fmt(s.current_price)}</td><td>${fmt(s.invested)}</td><td>${fmt(s.current_value)}</td><td style="color:${c}">${fmt(s.pnl)}</td><td style="color:${c}">${s.pnl_pct}%</td><td><button class="del" onclick="delStock(${s.id})">✕</button></td></tr>`})
+  }catch(e){console.error(e)}
+}
+async function addStock(){
+  const ticker=document.getElementById("port-ticker").value,buy_price=parseFloat(document.getElementById("port-price").value)
+  const quantity=parseFloat(document.getElementById("port-qty").value),date=document.getElementById("port-date").value
+  const note=document.getElementById("port-note").value
+  if(!ticker||!buy_price||!quantity||!date)return alert("Fill all fields")
+  await fetch(`${API}/portfolio/`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({ticker,buy_price,quantity,date,note})})
+  document.getElementById("port-ticker").value=""
+  document.getElementById("port-price").value=""
+  document.getElementById("port-qty").value=""
+  document.getElementById("port-note").value=""
+  document.getElementById("port-dd").style.display="none"
+  setDefaultDates();loadPortfolio();loadDashboard()
+}
+async function delStock(id){await fetch(`${API}/portfolio/${id}`,{method:"DELETE"});loadPortfolio()}
+async function searchPortStock(){
+  const q=document.getElementById("port-ticker").value.trim();const dd=document.getElementById("port-dd")
+  if(!q){dd.style.display="none";return}
+  clearTimeout(portSearchTimer)
+  portSearchTimer=setTimeout(async()=>{
+    try{
+      const country=USER?.country||"United States"
+      const r=await fetch(`${API}/stocks/search?q=${encodeURIComponent(q)}&country=${encodeURIComponent(country)}`)
+      const data=await r.json()
+      if(!data||!data.length){dd.style.display="none";return}
+      dd.innerHTML=data.map(s=>`<div onclick="selectPortStock('${s.ticker}',${s.price||0})" style="padding:9px 12px;cursor:pointer;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;transition:background .12s;" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='transparent'"><div><div style="font-size:12px;font-weight:700;color:var(--cyan);font-family:'JetBrains Mono',monospace">${s.ticker}</div><div style="font-size:10px;color:var(--muted)">${s.name}</div></div><div style="font-size:11px;font-weight:600">${s.price>0?CURRENCY+s.price.toFixed(2):"—"}</div></div>`).join("")
+      dd.style.display="block"
+    }catch{dd.style.display="none"}
+  },350)
+}
+function selectPortStock(ticker,price){document.getElementById("port-ticker").value=ticker;document.getElementById("port-dd").style.display="none";if(price>0)document.getElementById("port-price").value=price.toFixed(2);document.getElementById("port-qty").focus()}
+async function searchStocks(){
+  const q=document.getElementById("ticker-input").value.trim();const dd=document.getElementById("search-dropdown")
+  if(!q){dd.style.display="none";return}
+  clearTimeout(searchTimer)
+  searchTimer=setTimeout(async()=>{
+    try{
+      const country=USER?.country||"United States"
+      const r=await fetch(`${API}/stocks/search?q=${encodeURIComponent(q)}&country=${encodeURIComponent(country)}`)
+      const data=await r.json()
+      if(!data.length){dd.style.display="none";return}
+      dd.innerHTML=data.map(s=>`<div class="dd-item" onclick="selectStock('${s.ticker}')"><div><div class="dd-ticker">${s.ticker}</div><div class="dd-name">${s.name}</div></div><div style="font-size:11px;font-weight:600">${s.price>0?s.price.toFixed(2):"—"}</div></div>`).join("")
+      dd.style.display="block"
+    }catch{dd.style.display="none"}
+  },350)
+}
+function selectStock(ticker){document.getElementById("ticker-input").value=ticker;document.getElementById("search-dropdown").style.display="none";lookupStock()}
+async function lookupStock(){
+  const ticker=document.getElementById("ticker-input").value.trim().toUpperCase();if(!ticker)return
+  document.getElementById("stock-result").style.display="none";currentTicker=ticker
+  try{
+    const [stockRes,analysisRes]=await Promise.all([fetch(`${API}/stocks/${ticker}`),fetch(`${API}/stocks/${ticker}/analysis`)])
+    const d=await stockRes.json();if(d.error){alert(d.error);return}
+    const a=await analysisRes.json();currentStockData=d
+    const cur=(d.currency||"USD").toUpperCase(),isUSD=cur==="USD",sym=SYMS[cur]||cur+" "
+    const dp=(val)=>{if(!val||val==="N/A"||isNaN(parseFloat(val)))return"N/A";return isUSD?fmt(val):sym+parseFloat(val).toFixed(2)}
+    document.getElementById("s-name").textContent=d.name
+    document.getElementById("s-sub").textContent=`${d.ticker} · ${d.sector||""} · ${d.industry||""}`
+    document.getElementById("s-price").textContent=dp(d.price)
+    const chg=parseFloat(d.change_percent||0)*100,chgEl=document.getElementById("s-change")
+    chgEl.textContent=`${chg>=0?"+":""}${chg.toFixed(2)}% (52W)`;chgEl.style.color=chg>=0?"var(--green)":"var(--red)"
+    const sigBtn=document.getElementById("sig-btn")
+    if(a.signal==="BUY"){sigBtn.className="sig-buy";sigBtn.textContent="BUY"}
+    else if(a.signal==="SELL"){sigBtn.className="sig-sell";sigBtn.textContent="SELL"}
+    else{sigBtn.className="sig-hold";sigBtn.textContent="HOLD"}
+    document.getElementById("sig-reason").textContent=a.signal_reason||""
+    document.getElementById("sig-entry").textContent=dp(a.entry_price)
+    const riskEl=document.getElementById("sig-risk");riskEl.textContent=a.risk_level||"—";riskEl.style.color=a.risk_level==="High"?"var(--red)":a.risk_level==="Low"?"var(--green)":"var(--amber)"
+    document.getElementById("metrics-grid").innerHTML=`
+      <div class="metric-card"><h4>PE Ratio</h4><p style="color:var(--cyan)">${a.metrics.pe_ratio||"N/A"}</p></div>
+      <div class="metric-card"><h4>PB Ratio</h4><p style="color:var(--cyan)">${a.metrics.pb_ratio||"N/A"}</p></div>
+      <div class="metric-card"><h4>ROE</h4><p style="color:${a.metrics.roe>10?"var(--green)":"var(--muted)"}">${a.metrics.roe}%</p></div>
+      <div class="metric-card"><h4>Revenue Growth</h4><p style="color:${a.metrics.revenue_growth>5?"var(--green)":"var(--red)"}">${a.metrics.revenue_growth}%</p></div>
+      <div class="metric-card"><h4>Profit Margin</h4><p style="color:${a.metrics.profit_margins>10?"var(--green)":"var(--muted)"}">${a.metrics.profit_margins}%</p></div>
+      <div class="metric-card"><h4>Beta</h4><p style="color:${a.metrics.beta>1.5?"var(--red)":"var(--cyan)"}">${a.metrics.beta}</p></div>
+      <div class="metric-card"><h4>Dividend Yield</h4><p>${a.metrics.dividend_yield}%</p></div>
+      <div class="metric-card"><h4>D/E Ratio</h4><p style="color:${a.metrics.debt_to_equity>100?"var(--red)":"var(--cyan)"}">${a.metrics.debt_to_equity}</p></div>`
+    const bc=(v)=>v==="High"?"badge badge-high":v==="Avg"?"badge badge-avg":"badge badge-low"
+    document.getElementById("scorecard-grid").innerHTML=`
+      <div class="score-item"><span class="score-label">Performance</span><span class="${bc(a.scorecard.performance)}">${a.scorecard.performance}</span></div>
+      <div class="score-item"><span class="score-label">Valuation</span><span class="${bc(a.scorecard.valuation==="High"?"Low":a.scorecard.valuation==="Low"?"High":a.scorecard.valuation)}">${a.scorecard.valuation}</span></div>
+      <div class="score-item"><span class="score-label">Growth</span><span class="${bc(a.scorecard.growth)}">${a.scorecard.growth}</span></div>
+      <div class="score-item"><span class="score-label">Profitability</span><span class="${bc(a.scorecard.profitability)}">${a.scorecard.profitability}</span></div>
+      <div class="score-item"><span class="score-label">Entry Point</span><span class="${bc(a.scorecard.entry_point)}">${a.scorecard.entry_point}</span></div>
+      <div class="score-item"><span class="score-label">Red Flags</span><span class="${bc(a.scorecard.red_flags==="High"?"Low":"High")}">${a.scorecard.red_flags==="High"?"Found":"None"}</span></div>`
+    const km=document.getElementById("key-metrics-list");km.innerHTML=""
+    const kmData=[["52W High",dp(d["52_week_high"]),"var(--green)"],["52W Low",dp(d["52_week_low"]),"var(--red)"],["From High",a.metrics.from_52w_high.toFixed(1)+"%",a.metrics.from_52w_high<-20?"var(--green)":"var(--muted)"],["From Low","+"+a.metrics.from_52w_low.toFixed(1)+"%","var(--cyan)"],["Market Cap",d.market_cap&&d.market_cap!="N/A"?dp(d.market_cap/1e9)+"B":"N/A","var(--text2)"],["Current Ratio",a.metrics.current_ratio,"var(--text2)"]]
+    kmData.forEach(([l,v,c])=>km.innerHTML+=`<div class="holder-row"><span>${l}</span><span style="color:${c};font-weight:600;font-family:'JetBrains Mono',monospace">${v}</span></div>`)
+    renderHolders(a.holders);renderNews(a.news)
+    document.getElementById("stock-result").style.display="block"
+    loadChart(ticker,currentInterval,currentChartType);startLiveRefresh()
+  }catch(e){console.error(e);alert("Stock not found. Try RELIANCE.NS for Indian stocks.")}
+}
+function renderHolders(holders){
+  if(!holders)return
+  const canvas=document.getElementById("holders-pie")
+  const labels=["Promoter","Foreign Inst","Mutual Funds","Retail & Others"]
+  const values=[holders.promoter||0,holders.foreign||0,holders.mutual_funds||0,100-(holders.promoter||0)-(holders.foreign||0)-(holders.mutual_funds||0)].map(v=>Math.max(0,parseFloat(v.toFixed(1))))
+  const colors=["#38BDF8","#22C55E","#A78BFA","#566880"]
+  if(pieChart)pieChart.destroy()
+  pieChart=new Chart(canvas,{type:"doughnut",data:{labels,datasets:[{data:values,backgroundColor:colors,borderWidth:1,borderColor:"#0B1628"}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed.toFixed(1)}%`}}}}})
+  const leg=document.getElementById("holders-legend");leg.innerHTML=""
+  labels.forEach((l,i)=>leg.innerHTML+=`<div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0;"><span><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${colors[i]};margin-right:5px;"></span>${l}</span><span style="color:${colors[i]};font-weight:600;font-family:'JetBrains Mono',monospace">${values[i].toFixed(1)}%</span></div>`)
+}
+function renderNews(news){
+  const nl=document.getElementById("news-list")
+  if(!news||!news.length){nl.innerHTML='<div style="color:var(--muted);font-size:12px;">No news available</div>';return}
+  nl.innerHTML=news.map(n=>`<div class="news-item"><div class="news-title"><a href="${n.link}" target="_blank">${n.title}</a></div><div class="news-meta">${n.source}${n.published?" · "+n.published:""}</div></div>`).join("")
+}
+async function loadChart(ticker,interval,type){
+  const container=document.getElementById("lw-chart")
+  container.innerHTML='<div style="color:var(--muted);padding:20px;text-align:center;font-size:12px;">Loading chart...</div>'
+  try{
+    const r=await fetch(`${API}/stocks/${ticker}/chart?interval=${interval}`)
+    const data=await r.json()
+    if(!data.candles||!data.candles.length){container.innerHTML='<div style="color:var(--muted);padding:20px;text-align:center;font-size:12px;">No data for this interval</div>';return}
+    container.innerHTML=""
+    if(lwChart){try{lwChart.remove()}catch{}lwChart=null;lwSeries=null}
+    const cur=(currentStockData?.currency||"USD").toUpperCase(),isUSD=cur==="USD"
+    lwChart=LightweightCharts.createChart(container,{width:container.clientWidth,height:320,layout:{background:{color:"#0B1628"},textColor:"#566880"},grid:{vertLines:{color:"#1C3054"},horzLines:{color:"#1C3054"}},crosshair:{mode:LightweightCharts.CrosshairMode.Normal},rightPriceScale:{borderColor:"#1C3054"},timeScale:{borderColor:"#1C3054",timeVisible:true,secondsVisible:interval==="1m"||interval==="5m"}})
+    if(type==="candle"){
+      lwSeries=lwChart.addCandlestickSeries({upColor:"#22C55E",downColor:"#F43F5E",borderVisible:false,wickUpColor:"#22C55E",wickDownColor:"#F43F5E"})
+      lwSeries.setData(data.candles.map(c=>({time:c.time,open:isUSD?parseFloat(cv(c.open)):c.open,high:isUSD?parseFloat(cv(c.high)):c.high,low:isUSD?parseFloat(cv(c.low)):c.low,close:isUSD?parseFloat(cv(c.close)):c.close})))
+    } else {
+      lwSeries=lwChart.addAreaSeries({lineColor:"#38BDF8",topColor:"rgba(56,189,248,.12)",bottomColor:"rgba(56,189,248,.01)",lineWidth:2})
+      lwSeries.setData(data.candles.map(c=>({time:c.time,value:isUSD?parseFloat(cv(c.close)):c.close})))
+    }
+    lwChart.timeScale().fitContent()
+    new ResizeObserver(()=>{if(lwChart)lwChart.applyOptions({width:container.clientWidth})}).observe(container)
+  }catch(e){console.error("Chart:",e);container.innerHTML='<div style="color:var(--red);padding:20px;text-align:center;font-size:12px;">Chart failed — try a different interval</div>'}
+}
+function changeInterval(interval,el){currentInterval=interval;document.querySelectorAll(".ibtn").forEach(b=>b.classList.remove("active"));el.classList.add("active");if(currentTicker){loadChart(currentTicker,interval,currentChartType);startLiveRefresh()}}
+function changeChartType(type,el){currentChartType=type;document.querySelectorAll(".ctbtn").forEach(b=>b.classList.remove("active"));el.classList.add("active");if(currentTicker)loadChart(currentTicker,currentInterval,type)}
+async function startLiveRefresh(){
+  stopLiveRefresh()
+  const ms=currentInterval==="1m"?30000:currentInterval==="5m"?60000:currentInterval==="15m"?120000:0
+  if(!ms||!currentTicker)return
+  liveRefreshTimer=setInterval(async()=>{
+    try{
+      const r=await fetch(`${API}/stocks/${currentTicker}/price`);const d=await r.json()
+      if(d.price&&currentStockData){
+        currentStockData.price=d.price
+        const cur=(currentStockData.currency||"USD").toUpperCase(),isUSD=cur==="USD",sym=SYMS[cur]||"$"
+        document.getElementById("s-price").textContent=isUSD?fmt(d.price):(sym+d.price.toFixed(2))
+        const chgEl=document.getElementById("s-change");chgEl.textContent=`${d.change_pct>=0?"+":""}${d.change_pct.toFixed(2)}% today`;chgEl.style.color=d.change_pct>=0?"var(--green)":"var(--red)"
+      }
+      loadChart(currentTicker,currentInterval,currentChartType)
+    }catch{}
+  },ms)
+}
+function stopLiveRefresh(){if(liveRefreshTimer){clearInterval(liveRefreshTimer);liveRefreshTimer=null}}
+async function sendMsg(){
+  const inp=document.getElementById("chat-in"),msg=inp.value.trim();if(!msg)return
+  inp.value="";appendMsg(msg,"user","chat-msgs")
+  document.getElementById("typing").classList.add("show");scrollChat("chat-msgs")
+  try{
+    const r=await fetch(`${API}/agent/chat`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:msg,history:chatHistory.slice(-4),currency:CURRENCY,exchange_rate:EXCHANGE_RATE})})
+    const d=await r.json()
+    document.getElementById("typing").classList.remove("show");appendMsg(d.reply,"ai","chat-msgs")
+    chatHistory.push({role:"user",content:msg});chatHistory.push({role:"assistant",content:d.reply})
+    if(d.refresh)loadDashboard()
+  }catch{document.getElementById("typing").classList.remove("show");appendMsg("Server error.","ai","chat-msgs")}
+}
+async function sendStockMsg(){
+  const inp=document.getElementById("stock-chat-in"),msg=inp.value.trim();if(!msg)return
+  inp.value="";const ctx=currentTicker?`[${currentTicker}] ${msg}`:msg
+  appendMsg(msg,"user","stock-chat-msgs")
+  document.getElementById("stock-typing").classList.add("show");scrollChat("stock-chat-msgs")
+  try{
+    const r=await fetch(`${API}/agent/chat`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:ctx,history:stockChatHistory.slice(-4),currency:CURRENCY,exchange_rate:EXCHANGE_RATE})})
+    const d=await r.json()
+    document.getElementById("stock-typing").classList.remove("show");appendMsg(d.reply,"ai","stock-chat-msgs")
+    stockChatHistory.push({role:"user",content:ctx});stockChatHistory.push({role:"assistant",content:d.reply})
+  }catch{document.getElementById("stock-typing").classList.remove("show");appendMsg("Server error.","ai","stock-chat-msgs")}
+}
+function appendMsg(text,role,cid){const div=document.createElement("div");div.className=`msg ${role}`;if(role==="ai")div.innerHTML=`<div class="msg-lbl">SENRA</div>${text}`;else div.textContent=text;document.getElementById(cid).appendChild(div);scrollChat(cid)}
+function scrollChat(id){const c=document.getElementById(id);c.scrollTop=c.scrollHeight}
+function qs(msg){document.getElementById("chat-in").value=msg;sendMsg()}
+function sqt(msg){document.getElementById("stock-chat-in").value=msg;sendStockMsg()}
+
+// IMPORT
+let importFile=null
+async function previewImport(input){
+  const file=input.files[0];if(!file)return;importFile=file
+  const formData=new FormData();formData.append("file",file)
+  try{
+    document.getElementById("import-dropzone").innerHTML='<div style="font-size:12px;color:var(--cyan);">Analyzing file...</div>'
+    const r=await fetch(`${API}/import/preview`,{method:"POST",body:formData});const d=await r.json()
+    if(d.error){alert("Error: "+d.error);resetImport();return}
+    document.getElementById("imp-rows").textContent=d.total_rows
+    document.getElementById("imp-exp").textContent=d.expenses_found
+    document.getElementById("imp-inc").textContent=d.incomes_found
+    const et=document.getElementById("imp-exp-table");et.innerHTML=""
+    d.expenses_preview.forEach(e=>et.innerHTML+=`<tr><td>${e.date}</td><td style="color:var(--red)">${fmt(e.amount)}</td><td>${e.category}</td><td style="color:var(--muted);font-size:10px">${e.note.substring(0,40)}</td></tr>`)
+    const it=document.getElementById("imp-inc-table");it.innerHTML=""
+    d.incomes_preview.forEach(i=>it.innerHTML+=`<tr><td>${i.date}</td><td style="color:var(--green)">${fmt(i.amount)}</td><td>${i.source}</td><td style="color:var(--muted);font-size:10px">${i.note.substring(0,40)}</td></tr>`)
+    document.getElementById("import-preview").style.display="block";document.getElementById("import-dropzone").style.display="none"
+  }catch{alert("Failed to parse file.");resetImport()}
+}
+async function confirmImport(){
+  if(!importFile)return;const formData=new FormData();formData.append("file",importFile)
+  try{
+    const r=await fetch(`${API}/import/confirm`,{method:"POST",body:formData});const d=await r.json()
+    if(d.error){alert("Import failed: "+d.error);return}
+    document.getElementById("import-preview").style.display="none";document.getElementById("import-success").style.display="block"
+    document.getElementById("imp-success-msg").textContent=`✓ Imported ${d.expenses_added} expenses + ${d.incomes_added} income entries`
+    loadDashboard()
+  }catch{alert("Import failed.")}
+}
+function resetImport(){
+  importFile=null;document.getElementById("import-file").value=""
+  document.getElementById("import-preview").style.display="none";document.getElementById("import-success").style.display="none"
+  document.getElementById("import-dropzone").style.display="block"
+  document.getElementById("import-dropzone").innerHTML=`<div style="font-size:28px;margin-bottom:8px;">📂</div><div style="font-size:13px;font-weight:600;margin-bottom:4px;">Click to upload or drag & drop</div><div style="font-size:11px;color:var(--muted);">Supports CSV, XLSX, XLS</div><input type="file" id="import-file" accept=".csv,.xlsx,.xls" style="display:none" onchange="previewImport(this)">`
+}
+
+// SETTINGS
+function openSettings(){
+  document.getElementById("settings-modal").classList.add("show")
+  if(USER){document.getElementById("set-name").value=USER.full_name||"";document.getElementById("set-whatsapp").value=USER.whatsapp||"";document.getElementById("set-email").value=USER.email||""
+  const sel=document.getElementById("set-country");for(let i=0;i<sel.options.length;i++){if(sel.options[i].value===USER.country){sel.selectedIndex=i;break}}
+  updateCurrencyPreview()}
+  document.getElementById("toggle-dark").checked=localStorage.getItem("senra_dark")!=="false"
+  document.getElementById("toggle-compact").checked=localStorage.getItem("senra_compact")==="true"
+  document.getElementById("toggle-band").checked=localStorage.getItem("senra_band")!=="false"
+}
+function closeSettings(){document.getElementById("settings-modal").classList.remove("show")}
+document.getElementById("settings-modal").addEventListener("click",e=>{if(e.target===document.getElementById("settings-modal"))closeSettings()})
+function switchSettings(id,el){document.querySelectorAll(".settings-section").forEach(s=>s.classList.remove("active"));document.querySelectorAll(".snav-btn").forEach(b=>b.classList.remove("active"));document.getElementById(id).classList.add("active");el.classList.add("active")}
+function showSaveMsg(id,msg,ok=true){const el=document.getElementById(id);el.textContent=msg;el.style.color=ok?"var(--green)":"var(--red)";setTimeout(()=>el.textContent="",3000)}
+async function saveProfile(){
+  const full_name=document.getElementById("set-name").value.trim(),whatsapp=document.getElementById("set-whatsapp").value.trim()
+  if(!full_name)return showSaveMsg("profile-msg","Name cannot be empty",false)
+  try{const r=await fetch(`${API}/auth/profile?token=${TOKEN}`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({full_name,whatsapp})});const d=await r.json();if(!r.ok)return showSaveMsg("profile-msg",d.detail||"Failed",false);USER=d.user;document.getElementById("ud-name").textContent=USER.full_name;document.getElementById("ud-wa").textContent=USER.whatsapp||"—";const ini=USER.full_name.split(" ").map(n=>n[0]).join("").toUpperCase().slice(0,2);document.getElementById("user-btn").textContent=ini;showSaveMsg("profile-msg","✓ Profile updated")}catch{showSaveMsg("profile-msg","Server error",false)}
+}
+async function savePassword(){
+  const cur=document.getElementById("set-cur-pass").value,nw=document.getElementById("set-new-pass").value,conf=document.getElementById("set-conf-pass").value
+  if(!cur||!nw||!conf)return showSaveMsg("password-msg","Fill all fields",false)
+  if(nw!==conf)return showSaveMsg("password-msg","Passwords don't match",false)
+  if(nw.length<6)return showSaveMsg("password-msg","Min 6 characters",false)
+  try{const r=await fetch(`${API}/auth/change-password?token=${TOKEN}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({current_password:cur,new_password:nw})});const d=await r.json();if(!r.ok)return showSaveMsg("password-msg",d.detail||"Failed",false);showSaveMsg("password-msg","✓ Password updated");document.getElementById("set-cur-pass").value="";document.getElementById("set-new-pass").value="";document.getElementById("set-conf-pass").value=""}catch{showSaveMsg("password-msg","Server error",false)}
+}
+const COUNTRY_CURRENCY={"India":"₹ INR","United States":"$ USD","United Kingdom":"£ GBP","Europe":"€ EUR","Japan":"¥ JPY","Australia":"A$ AUD","Canada":"C$ CAD","Singapore":"S$ SGD","UAE":"AED"}
+function updateCurrencyPreview(){document.getElementById("currency-preview").textContent=COUNTRY_CURRENCY[document.getElementById("set-country").value]||"$ USD"}
+async function saveCountry(){
+  const country=document.getElementById("set-country").value
+  try{const r=await fetch(`${API}/auth/profile?token=${TOKEN}`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({country})});const d=await r.json();if(!r.ok)return showSaveMsg("country-msg",d.detail||"Failed",false);USER=d.user;CURRENCY=USER.currency_symbol;await fetchRate(USER.currency);document.getElementById("ud-country").textContent=USER.country;document.getElementById("ud-currency").textContent=USER.currency+" "+USER.currency_symbol;updateBadge();loadTickerBand();showSaveMsg("country-msg","✓ Updated")}catch{showSaveMsg("country-msg","Server error",false)}
+}
+function toggleTheme(){const dark=document.getElementById("toggle-dark").checked;localStorage.setItem("senra_dark",dark);if(dark){document.documentElement.style.setProperty("--bg","#070F1E");document.documentElement.style.setProperty("--bg2","#0B1628");document.documentElement.style.setProperty("--bg3","#0F1E35");document.documentElement.style.setProperty("--border","#1C3054");document.documentElement.style.setProperty("--text","#F0F4FF")}else{document.documentElement.style.setProperty("--bg","#F4F6FB");document.documentElement.style.setProperty("--bg2","#FFFFFF");document.documentElement.style.setProperty("--bg3","#EEF1F8");document.documentElement.style.setProperty("--border","#DDE3F0");document.documentElement.style.setProperty("--text","#0F172A")}}
+function toggleCompact(){const c=document.getElementById("toggle-compact").checked;localStorage.setItem("senra_compact",c);document.querySelectorAll(".card").forEach(el=>el.style.padding=c?"10px 12px":"16px 18px")}
+function toggleBandPref(){localStorage.setItem("senra_band",document.getElementById("toggle-band").checked)}
+function applyStoredPrefs(){if(localStorage.getItem("senra_dark")==="false")toggleTheme();if(localStorage.getItem("senra_compact")==="true"){const el=document.getElementById("toggle-compact");if(el){el.checked=true;toggleCompact()}}}
+async function downloadReport(type){
+  try{
+    let rows=[],headers=[],filename=""
+    if(type==="expenses"){const r=await fetch(`${API}/expenses/`);const data=await r.json();headers=["Date","Amount","Category","Note"];rows=data.map(e=>[e.date,e.amount,e.category,e.note]);filename="senra_expenses.csv"}
+    else if(type==="income"){const r=await fetch(`${API}/income/`);const data=await r.json();headers=["Date","Amount","Source","Note"];rows=data.map(i=>[i.date,i.amount,i.source,i.note]);filename="senra_income.csv"}
+    else if(type==="portfolio"){const r=await fetch(`${API}/portfolio/live`);const data=await r.json();headers=["Ticker","Quantity","Buy Price","Current Price","Invested","Value","P&L","P&L%"];rows=(data.holdings||[]).map(s=>[s.ticker,s.quantity,s.buy_price,s.current_price,s.invested,s.current_value,s.pnl,s.pnl_pct+"%"]);filename="senra_portfolio.csv"}
+    else if(type==="summary"){const r=await fetch(`${API}/dashboard/overview`);const d=await r.json();headers=["Metric","Value"];rows=[["Total Income",d.all_time.total_income],["Total Expenses",d.all_time.total_expenses],["Savings",d.all_time.savings],["Invested",d.all_time.total_invested],["This Month Income",d.this_month.income],["This Month Expenses",d.this_month.expenses],["This Month Saved",d.this_month.saved]];d.expenses_by_category.forEach(c=>rows.push(["Category: "+c.category,c.total]));filename="senra_summary.csv"}
+    const csv=[headers,...rows].map(r=>r.map(v=>`"${v}"`).join(",")).join("\n")
+    const blob=new Blob([csv],{type:"text/csv"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=filename;a.click();URL.revokeObjectURL(url)
+  }catch{alert("Could not generate report.")}
+}
+
+applyStoredPrefs();checkRememberMe();tryAutoLogin()
+</script>
+</body>
+</html>
