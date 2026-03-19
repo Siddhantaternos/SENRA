@@ -8,6 +8,11 @@ CORS(app)
 def home():
     return "Server running"
 
+# 👉 ADD THIS
+@app.route("/health")
+def health():
+    return {"status": "ok"}
+
 @app.route("/api/expense", methods=["POST"])
 def add_expense():
     data = request.json
