@@ -1,14 +1,15 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory # Add send_from_directory
 from flask_cors import CORS
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static') # Tell Flask where the files are
 CORS(app)
 
 @app.route("/")
 def home():
-    return "Server running"
+    # This sends your index.html file to the user's browser
+    return send_from_directory(app.static_folder, 'index.html')
 
-# 👉 ADD THIS
 @app.route("/health")
 def health():
     return {"status": "ok"}
@@ -19,7 +20,7 @@ def add_expense():
     print(data)
     return jsonify({"message": "received", "data": data})
 
-import os
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    # Railway provides the PORT variable automatically
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
